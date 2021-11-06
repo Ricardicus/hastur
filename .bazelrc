@@ -46,6 +46,7 @@ build:gnulike --per_file_copt='external/udev-zero[:/]@-Wno-unused-parameter'
 build:gnulike --per_file_copt='external/zlib[:/]@-Wno-format-nonliteral'
 
 build:clang --config=gnulike
+build:clang --cxxopt='-fcoroutines-ts'
 build:clang --per_file_copt='external/boringssl[:/]@-Wno-extra-semi'
 build:clang --per_file_copt='external/boringssl[:/]@-Wno-gnu-binary-literal'
 
@@ -54,6 +55,7 @@ build:clang13 --per_file_copt='external/libpng[:/]@-Wno-null-pointer-subtraction
 build:clang13 --per_file_copt='external/libpng[:/]@-Wno-unused-but-set-variable'
 
 build:gcc --config=gnulike
+build:gcc --cxxopt='-fcoroutines'
 build:gcc --per_file_copt='external/boringssl[:/]@-Wno-cast-function-type'
 build:gcc --per_file_copt='external/boringssl[:/]@-Wno-pedantic'
 build:gcc --per_file_copt='external/freetype2[:/]@-Wno-cast-function-type'
