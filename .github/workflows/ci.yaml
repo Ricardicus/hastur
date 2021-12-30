@@ -69,7 +69,6 @@ jobs:
         echo "CC=clang-${{ matrix.version }}" >> $GITHUB_ENV
         echo "CXX=clang++-${{ matrix.version }}" >> $GITHUB_ENV
     - uses: actions/checkout@v2
-    - uses: ./.github/actions/set-up-bazel
     - name: Install
       run: |
           sudo apt update
@@ -88,7 +87,6 @@ jobs:
         shell: bash
     steps:
     - uses: actions/checkout@v2
-    - uses: ./.github/actions/set-up-bazel
     - name: Build
       run: bazel build ///... --config msvc
     - name: Test
