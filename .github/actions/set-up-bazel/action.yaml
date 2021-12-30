@@ -1,0 +1,11 @@
+name: Set up Bazel
+description: Puts Bazelisk in the working directory under the name "bazel"
+runs:
+  using: "composite"
+  steps:
+  - run: wget https://github.com/bazelbuild/bazelisk/releases/download/v1.11.0/bazelisk-linux-amd64 --output-document=bazel
+    shell: bash
+    if: runner.os == 'Linux'
+  - run: curl --output bazel.exe https://github.com/bazelbuild/bazelisk/releases/download/v1.11.0/bazelisk-windows-amd64.exe
+    shell: bash
+    if: runner.os == 'Windows'
