@@ -142,6 +142,9 @@ build:ubsan --linkopt -fsanitize=undefined
 build:ubsan --linkopt -fsanitize-link-c++-runtime
 build:ubsan --action_env=UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1
 
+build:clang-tidy --aspects @bazel_clang_tidy//clang_tidy:clang_tidy.bzl%clang_tidy_aspect
+build:clang-tidy --output_groups=report
+
 # Misc configuration
 # =========================================================
 

@@ -104,6 +104,19 @@ jobs:
     - name: Upload
       run: bash <(curl -s https://codecov.io/bash) -f bazel-out/_coverage/_coverage_report.dat
 
+  clang-tidy:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install
+      run: |
+          sudo apt update
+          sudo apt install clang-tidy
+          echo "CC=clang-10" >> $GITHUB_ENV
+          echo "CXX=clang++-10" >> $GITHUB_ENV
+    - name: Build
+      run: bazel build //... --config clang-tidy --keep_going
+
   windows-msvc:
     runs-on: windows-2022
     defaults:
