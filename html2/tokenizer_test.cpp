@@ -93,7 +93,7 @@ int main() {
     });
 
     etest::test("script, with source file attribute", [] {
-        auto tokens = run_tokenizer("<script src=\"/foo.js\"></script>");
+        auto tokens = run_tokenizer(R"(<script src="/foo.js"></script>)");
 
         expect_token(tokens, StartTagToken{.tag_name = "script", .attributes = {{"src", "/foo.js"}}});
         expect_token(tokens, EndTagToken{.tag_name = "script"});
@@ -230,7 +230,7 @@ int main() {
     });
 
     etest::test("script, end tag with attribute", [] {
-        auto tokens = run_tokenizer("<script></script src=\"/foo.js\">");
+        auto tokens = run_tokenizer(R"(<script></script src="/foo.js">)");
 
         expect_token(tokens, StartTagToken{.tag_name = "script"});
         expect_token(tokens, EndTagToken{.tag_name = "script", .attributes = {{"src", "/foo.js"}}});
@@ -238,10 +238,10 @@ int main() {
     });
 
     etest::test("script, misspelled end tag with attribute", [] {
-        auto tokens = run_tokenizer("<script></scropt src=\"/foo.js\">");
+        auto tokens = run_tokenizer(R"(<script></scropt src="/foo.js">)");
 
         expect_token(tokens, StartTagToken{.tag_name = "script"});
-        expect_text(tokens, "</scropt src=\"/foo.js\">"sv);
+        expect_text(tokens, R"(</scropt src="/foo.js">)"sv);
         expect_token(tokens, EndOfFileToken{});
     });
 
@@ -271,7 +271,7 @@ int main() {
     });
 
     etest::test("script, escaped end tag with attributes", [] {
-        auto tokens = run_tokenizer("<script><!--</script src=\"/bar.js\">--></script>");
+        auto tokens = run_tokenizer(R"(<script><!--</script src="/bar.js">--></script>)");
 
         expect_token(tokens, StartTagToken{.tag_name = "script"});
         expect_text(tokens, "<!--"sv);
@@ -282,10 +282,10 @@ int main() {
     });
 
     etest::test("script, misspelled escaped end tag with attributes", [] {
-        auto tokens = run_tokenizer("<script><!--</scropt src=\"/bar.js\">--></script>");
+        auto tokens = run_tokenizer(R"(<script><!--</scropt src="/bar.js">--></script>)");
 
         expect_token(tokens, StartTagToken{.tag_name = "script"});
-        expect_text(tokens, "<!--</scropt src=\"/bar.js\">-->"sv);
+        expect_text(tokens, R"(<!--</scropt src="/bar.js">-->)"sv);
         expect_token(tokens, EndTagToken{.tag_name = "script"});
         expect_token(tokens, EndOfFileToken{});
     });
@@ -486,21 +486,21 @@ int main() {
     });
 
     etest::test("attribute, one attribute double quoted", [] {
-        auto tokens = run_tokenizer("<tag a=\"b\">");
+        auto tokens = run_tokenizer(R"(<tag a="b">)");
 
         expect_token(tokens, StartTagToken{.tag_name = "tag", .attributes = {{"a", "b"}}});
         expect_token(tokens, EndOfFileToken{});
     });
 
     etest::test("attribute, one uppercase attribute", [] {
-        auto tokens = run_tokenizer("<tag ATTRIB=\"ABC123\">");
+        auto tokens = run_tokenizer(R"(<tag ATTRIB="ABC123">)");
 
         expect_token(tokens, StartTagToken{.tag_name = "tag", .attributes = {{"attrib", "ABC123"}}});
         expect_token(tokens, EndOfFileToken{});
     });
 
     etest::test("attribute, multiple attributes", [] {
-        auto tokens = run_tokenizer("<tag  foo=\"bar\" A='B'  value='321'>");
+        auto tokens = run_tokenizer(R"(<tag  foo="bar" A='B'  value='321'>)");
 
         expect_token(
                 tokens, StartTagToken{.tag_name = "tag", .attributes = {{"foo", "bar"}, {"a", "B"}, {"value", "321"}}});
