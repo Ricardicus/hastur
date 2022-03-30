@@ -37,11 +37,11 @@ constexpr auto kImmediatelyPopped = std::to_array({"br"sv, "hr"sv, "img"sv, "lin
 } // namespace
 
 void Parser::on_token(html2::Tokenizer &, html2::Token &&token) {
-    if (auto doctype = std::get_if<html2::DoctypeToken>(&token)) {
+    if (auto const *doctype = std::get_if<html2::DoctypeToken>(&token)) {
         if (doctype->name.has_value()) {
             doc_.doctype = *(doctype->name);
         }
-    } else if (auto start_tag = std::get_if<html2::StartTagToken>(&token)) {
+    } else if (auto const *start_tag = std::get_if<html2::StartTagToken>(&token)) {
         if (start_tag->tag_name == "html"sv) {
             doc_.html().name = start_tag->tag_name;
             doc_.html().attributes = into_dom_attributes(start_tag->attributes);
@@ -78,7 +78,7 @@ void Parser::on_token(html2::Tokenizer &, html2::Token &&token) {
         if (!start_tag->self_closing && is_in_array<kImmediatelyPopped>(start_tag->tag_name)) {
             open_elements_.pop();
         }
-    } else if (auto end_tag = std::get_if<html2::EndTagToken>(&token)) {
+    } else if (auto const *end_tag = std::get_if<html2::EndTagToken>(&token)) {
         if (open_elements_.empty()) {
             spdlog::warn("End tag [{}] encountered with no elements still open", end_tag->tag_name);
             return;
@@ -95,7 +95,7 @@ void Parser::on_token(html2::Tokenizer &, html2::Token &&token) {
         open_elements_.pop();
     } else if (std::get_if<html2::CommentToken>(&token) != nullptr) {
         // Do nothing.
-    } else if (auto character = std::get_if<html2::CharacterToken>(&token)) {
+    } else if (auto const *character = std::get_if<html2::CharacterToken>(&token)) {
         current_text_ << character->data;
     } else if (std::get_if<html2::EndOfFileToken>(&token) != nullptr) {
         if (!open_elements_.empty()) {
