@@ -70,7 +70,7 @@ std::vector<Element const *> nodes_by_path(std::reference_wrapper<Element const>
         searching.swap(next_search);
         next_search.clear();
 
-        for (auto node : searching) {
+        for (auto const *node : searching) {
             if (path == node->name) {
                 goal_nodes.push_back(node);
                 continue;
