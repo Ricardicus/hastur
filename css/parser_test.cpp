@@ -46,8 +46,8 @@ const auto initial_font_values = std::map<std::string, std::string>{{"font-stret
         {"font-variant-position", "normal"},
         {"font-variant-east-asian", "normal"}};
 
-bool check_initial_font_values(std::map<std::string, std::string> declarations) {
-    for (auto [property, value] : declarations) {
+bool check_initial_font_values(std::map<std::string, std::string> const &declarations) {
+    for (auto const &[property, value] : declarations) {
         auto it = initial_font_values.find(property);
         if (it != cend(initial_font_values) && it->second != value) {
             return false;
@@ -57,7 +57,7 @@ bool check_initial_font_values(std::map<std::string, std::string> declarations) 
 }
 
 template<class KeyT, class ValueT>
-ValueT get_and_erase(std::map<KeyT, ValueT> &map, KeyT key) {
+ValueT get_and_erase(std::map<KeyT, ValueT> &map, KeyT const &key) {
     ValueT value = map[key];
     map.erase(key);
     return value;
@@ -229,7 +229,7 @@ int main() {
     });
 
     auto box_shorthand_one_value = [](std::string property, std::string value, std::string post_fix = "") {
-        return [=] {
+        return [property = std::move(property), value = std::move(value), post_fix = std::move(post_fix)] {
             auto rules = css::parse(fmt::format("p {{ {}: {}; }}"sv, property, value));
             require(rules.size() == 1);
 
@@ -254,7 +254,7 @@ int main() {
 
     auto box_shorthand_two_values =
             [](std::string property, std::array<std::string, 2> values, std::string post_fix = "") {
-                return [=] {
+                return [property = std::move(property), values = std::move(values), post_fix = std::move(post_fix)] {
                     auto rules = css::parse(fmt::format("p {{ {}: {} {}; }}"sv, property, values[0], values[1]));
                     require(rules.size() == 1);
 
@@ -280,7 +280,7 @@ int main() {
     auto box_shorthand_three_values = [](std::string property,
                                               std::array<std::string, 3> values,
                                               std::string post_fix = "") {
-        return [=] {
+        return [property = std::move(property), values = std::move(values), post_fix = std::move(post_fix)] {
             auto rules = css::parse(fmt::format("p {{ {}: {} {} {}; }}"sv, property, values[0], values[1], values[2]));
             require(rules.size() == 1);
 
@@ -305,7 +305,7 @@ int main() {
 
     auto box_shorthand_four_values =
             [](std::string property, std::array<std::string, 4> values, std::string post_fix = "") {
-                return [=] {
+                return [property = std::move(property), values = std::move(values), post_fix = std::move(post_fix)] {
                     auto rules = css::parse(fmt::format(
                             "p {{ {}: {} {} {} {}; }}"sv, property, values[0], values[1], values[2], values[3]));
                     require(rules.size() == 1);
@@ -331,7 +331,7 @@ int main() {
 
     auto box_shorthand_overridden =
             [](std::string property, std::array<std::string, 3> values, std::string post_fix = "") {
-                return [=] {
+                return [property = std::move(property), values = std::move(values), post_fix = std::move(post_fix)] {
                     auto rules = css::parse(fmt::format(R"(
                             p {{
                                {0}: {2};
@@ -366,7 +366,7 @@ int main() {
 
     auto box_override_with_shorthand =
             [](std::string property, std::array<std::string, 4> values, std::string post_fix = "") {
-                return [=] {
+                return [property = std::move(property), values = std::move(values), post_fix = std::move(post_fix)] {
                     auto rules = css::parse(fmt::format(R"(
                             p {{
                                {0}-bottom{1}: {2};
