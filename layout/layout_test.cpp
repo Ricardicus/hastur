@@ -9,7 +9,6 @@
 using namespace std::literals;
 using etest::expect;
 using etest::expect_eq;
-using etest::require;
 using layout::LayoutType;
 
 // TODO(robinlinden): clang-format doesn't get along well with how I structured
