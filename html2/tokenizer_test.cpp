@@ -37,7 +37,7 @@ std::vector<Token> run_tokenizer(std::string_view input) {
     return tokens;
 }
 
-void expect_token(std::vector<Token> &tokens, Token t) {
+void expect_token(std::vector<Token> &tokens, Token const &t) {
     expect_eq(tokens.front(), t);
     tokens.erase(begin(tokens));
 }
